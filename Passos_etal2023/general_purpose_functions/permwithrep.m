@@ -1,7 +1,7 @@
-% result = permwithrep(v,k)
+% result = permwithrep(v, k)
 %
-% Returns all permutations of the v elments, with repetition,
-% taken k at a time.
+% Returns all permutations of the <v> elments, with repetition,
+% taken <k> at a time.
 %
 % INPUT:
 %
@@ -16,7 +16,7 @@
 % AUTHOR: Paulo Passos Last MODIFIED: 01/08/2023
 
 
-function result = permwithrep(v,k)
+function result = permwithrep(v, k)
 
 n = length(v); 
 

@@ -1,4 +1,4 @@
-% [tau_est] = tauest_real(alphal, rt, chain, show)
+% [tau_est] = tauest_real(alphal, rt, chain)
 %
 % Returns <tau_est> the estimated tree from a conditioning sequence of sym-
 % bols with alphabet A = {0,1,2} and the conditioned sequence of  real num-
@@ -10,17 +10,16 @@
 % alphal = positive integer that corresponds to the length of the alphabet.
 % rt     = row vector containing the sequence of real numbers.
 % chain  = row vector containing the conditioning sequence.
-% show   = if set to 1, presents the graphical representation of the tree
 %
 % OUTPUT:
 %
 % tau_est = cell in which each entry corresponds to a context of the  esti-
-% mated tree
+%           mated tree
 %
 % AUTHOR: Paulo Roberto Cabral Passos Last MODIFIED: 01/08/2023
 
 
-function [tau_est] = tauest_real(alphal, rt, chain, show)
+function [tau_est] = tauest_real(alphal, rt, chain)
 
     % building the alphabet
     A = zeros(1,alphal);
@@ -76,7 +75,4 @@ function [tau_est] = tauest_real(alphal, rt, chain, show)
         %
     end
 
-    if show == 1
-    draw_contexttree(tau_est, A)
-    end
 end

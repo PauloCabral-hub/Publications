@@ -6,7 +6,8 @@
 % INPUT:
 %
 % s       = string that induces the terminal branch
-% tau_est = estimated tree
+% tau_est = cell in which each entry corresponds to a context of the 
+%           estimated tree.
 % pos     = positions in the estimated tree of the strings induced by s
 % chain   = conditioning sequence follwowing tau_real function
 % rt      = conditioned sequence of real numbers
@@ -18,7 +19,7 @@
 % AUTHOR: Paulo Passos     MODIFIED: 01/08/2023
 
 
-function tau_est = cut_branch(s,tau_est, pos, chain, rt)
+function tau_est = cut_branch(s, tau_est, pos, chain, rt)
 
 
 sind = cell(1,length(pos));
