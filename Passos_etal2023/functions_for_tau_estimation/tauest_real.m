@@ -1,25 +1,25 @@
-% [tau_est] = tauest_real(alphal, rt, chain)
+% [tau_est] = tauest_real(alphal, real_chain, chain)
 %
 % Returns <tau_est> the estimated tree from a conditioning sequence of sym-
 % bols with alphabet A = {0,1,2} and the conditioned sequence of  real num-
-% bers <rt>. In Passos_etal2023, <chain> corresponds to the goalkeeper  se-
-% quence, while <rt> corresponds to a sequence of response times.
+% bers <real_chain>. In Passos_etal2023, <chain> corresponds to the goalkeeper  se-
+% quence, while <real_chain> corresponds to a sequence of response times.
 %
 % INPUT:
 % 
-% alphal = positive integer that corresponds to the length of the alphabet.
-% rt     = row vector containing the sequence of real numbers.
-% chain  = row vector containing the conditioning sequence.
+% alphal     = positive integer that corresponds to the length of the alphabet.
+% real_chain = row vector containing the sequence of real numbers.
+% chain      = row vector containing the conditioning sequence.
 %
 % OUTPUT:
 %
-% tau_est = cell in which each entry corresponds to a context of the  esti-
-%           mated tree
+% tau_est    = cell in which each entry corresponds to a context of the  esti-
+%            mated tree
 %
 % AUTHOR: Paulo Roberto Cabral Passos Last MODIFIED: 01/08/2023
 
 
-function [tau_est] = tauest_real(alphal, rt, chain)
+function [tau_est] = tauest_real(alphal, real_chain, chain)
 
     % building the alphabet
     A = zeros(1,alphal);
@@ -66,9 +66,9 @@ function [tau_est] = tauest_real(alphal, rt, chain)
         % pruning procedure
             if ~isempty(pos)
                 if isempty(perm) % root branch
-                    tau_est = cut_branch(perm,tau_est, pos, chain, rt);
-                else % Other branches
-                    tau_est = cut_branch(perm(a,:),tau_est, pos, chain, rt);
+                    tau_est = cut_branch(perm,tau_est, pos, chain, real_chain);
+                else % other branches
+                    tau_est = cut_branch(perm(a,:),tau_est, pos, chain, real_chain);
                 end
             end
         end

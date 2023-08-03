@@ -1,25 +1,25 @@
-% tau_est = cut_branch(s,tau_est, pos, chain, rt)
+% tau_est = cut_branch(s,tau_est, pos, chain, real_chain)
 %
 % Returns the estimated tree after deciding if a terminal brach should
 % be prunned or not.
 %
 % INPUT:
 %
-% s       = string that induces the terminal branch
-% tau_est = cell in which each entry corresponds to a context of the 
-%           estimated tree.
-% pos     = positions in the estimated tree of the strings induced by s
-% chain   = conditioning sequence follwowing tau_real function
-% rt      = conditioned sequence of real numbers
+% s          = string that induces the terminal branch
+% tau_est    = cell in which each entry corresponds to a context of the 
+%            estimated tree.
+% pos        = positions in the estimated tree of the strings induced by s
+% chain      = conditioning sequence follwowing tau_real function
+% real_chain = conditioned sequence of real numbers
 %
 % OUTPUT:
 %
-% tau_est = the estimated tree after a prunning procedure
+% tau_est    = the estimated tree after a prunning procedure
 %
 % AUTHOR: Paulo Passos     MODIFIED: 01/08/2023
 
 
-function tau_est = cut_branch(s, tau_est, pos, chain, rt)
+function tau_est = cut_branch(s, tau_est, pos, chain, real_chain)
 
 
 sind = cell(1,length(pos));
@@ -36,7 +36,7 @@ sit = length(pos)-length(nh);
 
 if (isempty(nh))&&(length(pos) ~= 1)
 % disp('Case 1')
-ncut = prun_criteria(sind,chain, rt);
+ncut = prun_criteria(sind,chain, real_chain);
     if ncut ~= 1
         if brother_suffofacontext(tau_est, tau_est{1,pos(1,1)}, 3)
             % disp('subcase 3.1')
@@ -99,7 +99,7 @@ if ( sit >= 2 )&&( sit < (length(pos)) )
         end
     end
     if jump == 0
-    ncut = prun_criteria(sind,chain, rt);
+    ncut = prun_criteria(sind,chain, real_chain);
         if ncut ~= 1
         tau_est = removing_branch_how(tau_est,pos,s,0); 
         end        

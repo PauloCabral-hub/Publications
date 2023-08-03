@@ -1,25 +1,25 @@
-% tau_est = removing_branch_how(tau_est, pos, s, cleans)
+% tau_est = removing_branch_how(tau_est, pos, scontext, cleans)
 %
 % Returns <tau_est> with the branch induced by <s> prunned. Also used
 % for cleaning empty strings in <tau_est>.
 %
 % INPUT:
 %
-% tau_est = cell in which each entry corresponds to a context of the 
-%           estimated tree.
-% pos     = indicates the indixes in <tau_est> where contexts  indu-
-%           ced by <s> occur.
-% s       = string which induces a branch.
-% clean   = set to 1 to clean empty contexts in <tau_est>
+% tau_est  = cell in which each entry corresponds to a context of the 
+%          estimated tree.
+% pos      = indicates the indixes in <tau_est> where contexts  indu-
+%           ced by <scontext> occur.
+% scontext = string which induces a branch.
+% clean    = set to 1 to clean empty contexts in <tau_est>
 %
 % OUTPUT:
 %
-% tau_est = cell in which each entry corresponds to a context of the 
-%           estimated tree.
+% tau_est  = cell in which each entry corresponds to a context of the 
+%          estimated tree.
 %
 % AUTHOR: Paulo Roberto Cabral Passos     MODIFIED: 02/08/2023
 
-function tau_est = removing_branch_how(tau_est, pos, s, clean)
+function tau_est = removing_branch_how(tau_est, pos, scontext, clean)
 
 
 if clean == 1
@@ -48,7 +48,7 @@ else
            end
         end
         tau_est = holder;
-        if insert_s(tau_est,s) == 1; tau_est{1,length(tau_est)+1} = s; end
+        if insert_s(tau_est,s) == 1; tau_est{1,length(tau_est)+1} = scontext; end
     end    
 end
  
