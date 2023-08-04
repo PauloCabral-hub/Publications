@@ -19,7 +19,7 @@
 % string_seq      = sequence of characters defining the tikz tree structure
 % full_tree       = as defined in <full_tree> input.
 %
-% author: Paulo Roberto Cabral Passos   date: 03/08/2023
+% AUTHOR: Paulo Roberto Cabral Passos   MODIFIED: 03/08/2023
 
 function [string_seq, full_tree] = write_tree(node, full_tree, string_seq, alphabet, vtree)
 
@@ -39,7 +39,7 @@ ispart = 0;
     if ispart == 1    
         node_add_pre = ' child{ [fill] circle (2pt) node (';
     else
-        node_add_pre = ' child{ [fill, white] circle (2pt) node (';
+        node_add_pre = ' child{ [fill, transparent, white] circle (2pt) node (';
     end
 node_add_pos = ') {}';
 node_close = '}';

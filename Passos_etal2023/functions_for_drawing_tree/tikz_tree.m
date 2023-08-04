@@ -14,7 +14,7 @@
 %
 % string_seq   = code sequence to generate tree drawing using tikz package.
 %
-% author: Paulo Roberto Cabral Passos   date: 04/08/2023
+% AUTHOR: Paulo Roberto Cabral Passos   MODIFIED: 04/08/2023
 
 function string_seq = tikz_tree(tree, alphabet, label_leafs)
 
