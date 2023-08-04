@@ -49,6 +49,6 @@ velements = zeros(1,length(fvtree));
         end
     end
 
-vtree = fvtree{1, find(velements == 1)}; %#ok<FNDSB>
+vtree = fvtree(1, find(velements == 1)); %#ok<FNDSB>
 
 end

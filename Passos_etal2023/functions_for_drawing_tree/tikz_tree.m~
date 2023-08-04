@@ -4,17 +4,16 @@
 %
 % INPUT:
 %
-% tree         = cell in which each column represents a different leaf.
-% alphabet     = row vector containing in each column  a  different  number
-%              that composes the leafs.
-% label_leafs  = insert leaf label if set to 1.
+% tree            = cell in which each column represents a different leaf.
+% alphabet        = row vector containing in each column a different number
+%                 that composes the leafs.
+% label_leafs     = insert 
 % 
 %
 % OUTPUT:
+% example = description
 %
-% string_seq   = code sequence to generate tree drawing using tikz package.
-%
-% author: Paulo Roberto Cabral Passos   date: 04/08/2023
+% author: Paulo Roberto Cabral Passos   date: 03/08/2023
 
 function string_seq = tikz_tree(tree, alphabet, label_leafs)
 
@@ -48,11 +47,11 @@ if label_leafs == 1
           w_string = num2str(w);
       else
           for b = 1:length(w)
-              w_string = [w_string num2str(w(b)) 'o']; %#ok<AGROW>
+              w_string = [w_string num2str(w(b)) 'o'];
           end
           w_string = w_string(1:end-1);
       end
-      string_seq = [string_seq '\node [ below of=' w_string ', yshift=0.75cm ]{' replace(num2str(w),' ', '') '};' newline]; %#ok<AGROW>
+      string_seq = [string_seq '\node [ below of=' w_string ' ]{' replace(num2str(w),' ', '') '};' newline]; %#ok<AGROW>
    end
 end
 
