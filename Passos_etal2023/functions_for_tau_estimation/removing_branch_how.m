@@ -48,7 +48,7 @@ else
            end
         end
         tau_est = holder;
-        if insert_s(tau_est,s) == 1; tau_est{1,length(tau_est)+1} = scontext; end
+        if insert_s(tau_est,scontext) == 1; tau_est{1,length(tau_est)+1} = scontext; end
     end    
 end
  
