@@ -23,7 +23,7 @@
 % AUTHOR: Paulo Passos     MODIFIED: 01/08/2023
 
 
-function tau_est = cut_branch_ftype(s, tau_est, pos, chain, sig_set, proj_num, sample_stretch)
+function [tau_est, mosaic] = cut_branch_ftype(s, tau_est, pos, chain, sig_set, proj_num, sample_stretch, mosaic)
 
 sind = cell(1,length(pos));
 for a = 1:length(pos)
@@ -39,7 +39,7 @@ sit = length(pos)-length(nh);
 
 if (isempty(nh))&&(length(pos) ~= 1)
 % disp('Case 1')
-ncut = prun_criteria_ftype(sind,chain, sig_set, proj_num, sample_stretch);
+[ncut, mosaic] = prun_criteria_ftype(sind,chain, sig_set, proj_num, sample_stretch, mosaic);
     if ncut ~= 1
         if brother_suffofacontext(tau_est, tau_est{1,pos(1,1)}, 3)
             % disp('subcase 3.1')
@@ -102,7 +102,7 @@ if ( sit >= 2 )&&( sit < (length(pos)) )
         end
     end
     if jump == 0
-    ncut = prun_criteria_ftype(sind,chain, sig_set, proj_num, sample_stretch);
+    [ncut, mosaic] = prun_criteria_ftype(sind,chain, sig_set, proj_num, sample_stretch, mosaic);
         if ncut ~= 1
         tau_est = removing_branch_how(tau_est,pos,s,0); 
         end        

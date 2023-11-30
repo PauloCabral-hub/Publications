@@ -1,4 +1,4 @@
-% [string_seq, full_tree] = write_tree(node, full_tree, string_seq, alphabet, vtree)
+% standalone_tickztree(string_seq, name)
 %
 % ATTENTION: should run from Passos_etal2023 folder. 
 %

@@ -21,8 +21,9 @@
 % OUTPUT:
 % ncut    = is set to 1 if the contexts in contexts should not be prunned.
 
+% SOLVE THE PROBLEM HERE
 
-function ncut = prun_criteria_ftype(contexts, schain, sig_set, proj_num, sample_stretch)
+function [ncut, mosaic] = prun_criteria_ftype(contexts, schain, sig_set, proj_num, sample_stretch, mosaic)
 
 % discarding empty contexts
 holder = cell(1,1); aux = 1;
@@ -41,7 +42,7 @@ celldist = cell(max(count),length(contexts));
 for a = 1:length(contexts)
    for b = 1:count(a,1)
       if (loc(a,b)+1) <= length(schain)
-        celldist(b,a) = sig_set( (loc(a,b)+1),1 );
+        celldist{b,a} = sig_set{ loc(a,b)+1,1 };
       end
    end
 end
@@ -59,19 +60,29 @@ B = celldist( :,compare(a,2) );
             fprintf('Processing...performing projection tests: %d %% \n', floor(100*b/proj_num) );
         end
         [proj_vals, proj_labels] = get_projections(A, B, sample_stretch);
-        partial_result = kstest2(proj_vals(proj_labels == 1), proj_vals(proj_labels == 2, 1));
+        partial_result = kstest2(proj_vals(proj_labels == 1), proj_vals(proj_labels == 2));
         results(a,1) = results(a,1) + partial_result;
     end
-    
-    if results(a,1) > ceil(proj_num/2)
+    fprintf(['Accepted/Rejected Ratio = ' num2str( results(a,1)/proj_num) '\n']);
+    if results(a,1) > ceil(0.0552*proj_num)
        fresults(a,1) = 1;
     end
 end
 
-if sum(results,1)/length(results) ~=0
-ncut = 1;
+if sum(fresults,1)/length(fresults) ~=0
+    ncut = 1;
+    fprintf('Result of proj. test...KEEP \n');
+    for a = 1:length(contexts)
+       for b = 1:count(a,1)
+          if (loc(a,b)+1) <= length(schain)
+            mosaic = [mosaic sig_set{ loc(a,b)+1,1 }'];
+          end
+       end    
+    end
+    
 else
-ncut = 0;
+    ncut = 0;
+    fprintf('Result of proj. test...PRUNNED \n');
 end
 
 end

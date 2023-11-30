@@ -25,16 +25,16 @@ for a = 1:size(EEGsignals,1)
 sig = double(EEGsignals(a,:));
 
 % High-pass filtering
-
-[c_high,d_high] = butter(2,low_cut*2/fs, 'high' );
-
-sig = filtfilt(c_high,d_high,sig);    
+if low_cut > 0 
+    [c_high,d_high] = butter(2,low_cut*2/fs, 'high' );
+    sig = filtfilt(c_high,d_high,sig);    
+end  
  
 % Low-pass filtering
-
-[c_low,d_low] = butter(2,upper_cut*2/fs, 'low' );
-
-sig = filtfilt(c_low,d_low,sig);
+if upper_cut > 0
+    [c_low,d_low] = butter(2,upper_cut*2/fs, 'low' );
+    sig = filtfilt(c_low,d_low,sig);    
+end
 
 fEEGsignals(a,:) = sig;
 

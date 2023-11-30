@@ -82,6 +82,9 @@ for a = 1:length(workwith_corrected)
              rcount = rcount+1;
                     %%%% Defining signal latencies %%%%
              data(rcount,10) = workwith_corrected(a).latency;
+             % ALTERNATIVE: USING THE GOALKEEPER TO GET THE RESP. TIME
+             data(rcount,13) = workwith_corrected(a).latency;
+             % ALTERNATIVE: USING THE GOALKEEPER TO GET THE RESP. TIME
              data(rcount,11) = workwith_corrected(a-1).latency;
                     %%%% --------------------- %%%%
              if workwith_corrected(a).type(4) == '2'
@@ -99,9 +102,11 @@ for a = 1:length(workwith_corrected)
              end
              %%%%%%%
              %%%%%%% Getting the begining of the fb (13)
+             % ALTERNATIVE: USING THE GOALKEEPER TO GET THE RESP. TIME
              if (a+2 <= length(workwith_corrected)) && strcmp(workwith_corrected(a+2).type,'D  3')
                 data(rcount,13) = workwith_corrected(a+2).latency; 
-             end                 
+             end
+             % ALTERNATIVE: USING THE GOALKEEPER TO GET THE RESP. TIME
              %%%%%%% Getting the end of the fb (14)
              if (a+4 <= length(workwith_corrected)) && strcmp(workwith_corrected(a+4).type,'D  1')
                 data(rcount,14) = workwith_corrected(a+4).latency;

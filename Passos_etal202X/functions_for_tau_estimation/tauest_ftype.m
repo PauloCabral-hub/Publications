@@ -24,7 +24,8 @@
 %
 % AUTHOR: Paulo Roberto Cabral Passos Last modified: 18/10/2023
 
-function [tau_est] = tauest_ftype(alphal, chain, sig_set, proj_num, sample_stretch)
+function [tau_est, mosaic] = tauest_ftype(alphal, chain, sig_set, proj_num, sample_stretch)
+    mosaic = [];
     p_times = 0;
     % building the alphabet
     A = zeros(1,alphal);
@@ -50,7 +51,7 @@ function [tau_est] = tauest_ftype(alphal, chain, sig_set, proj_num, sample_stret
             perm = permwithrep(A,L-h);
             branchs = size(perm,1);
         end
-        % finding the leaft of the branch
+        % finding the leafs of the branch
         for a = 1:branchs
            pos = []; 
            for b = 1:length(tau_est)
@@ -70,22 +71,26 @@ function [tau_est] = tauest_ftype(alphal, chain, sig_set, proj_num, sample_stret
         %  
         % pruning procedure
             if ~isempty(pos)
+                fprintf('You are at the following branch: \n');
+                for c = 1:length(pos)
+                    fprintf([ num2str(tau_est{pos(c)}) '\n']);
+                end
                 if isempty(perm) % root branch
                     p_times = p_times+1;
                     if rem(p_times,10) == 0
                         fprintf('...performing pruning procedure for the %d-esimal time (root branch).\n', p_times)
                     end
-                    tau_est = cut_branch_ftype(perm,tau_est, pos, chain, sig_set, proj_num, sample_stretch);
+                    [tau_est, mosaic] = cut_branch_ftype(perm,tau_est, pos, chain, sig_set, proj_num, sample_stretch, mosaic);
                 else % other branches
                     p_times = p_times+1;
                     if rem(p_times,10) == 0                    
-                        fprintf('...performing pruning procedure for the %d-esimal time.\n', p_times)
+                        fprintf('...performing pruning procedure for the %d-esimal time. \n', p_times)
                     end
-                    tau_est = cut_branch_ftype(perm(a,:),tau_est, pos, chain, sig_set, proj_num, sample_stretch);
+                    [tau_est, mosaic] = cut_branch_ftype(perm(a,:),tau_est, pos, chain, sig_set, proj_num, sample_stretch, mosaic);
                 end
             end
         end
         %
     end
-
+fprintf('End of procedure. \n');
 end

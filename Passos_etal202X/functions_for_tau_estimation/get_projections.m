@@ -26,12 +26,13 @@
 
 function [proj_vals, proj_labels] = get_projections(A, B, sample_stretch)
 
-bridge = brownianbrigde(sample_stretch+1);
+bridge = brownianbrigde(sample_stretch);
 
 proj_vals = zeros(2*length(A),1);
 proj_labels = zeros(2*length(A),1);
 aux = 1;
-    for k = 1:length(A)
+len_A = length(A);
+    for k = 1:len_A
         if ~isempty(A{k,1})
             proj = dot( bridge, A{k,1} );
             proj_vals(aux,1) = proj;
@@ -39,8 +40,8 @@ aux = 1;
             aux = aux+1;
         end
     end
-    
-    for k = 1:length(B)
+len_B = length(B);
+    for k = 1:len_B
         if ~isempty(B{k,1})
             proj = dot( bridge, B{k,1} );
             proj_vals(aux,1) = proj;
