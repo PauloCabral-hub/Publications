@@ -1,0 +1,9 @@
+# Matlab datafiles
+**.mat
+
+# EEGlab datasets
+**.fdt
+**.set
+
+# Diaries log files
+**.log

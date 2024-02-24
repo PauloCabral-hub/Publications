@@ -69,7 +69,7 @@ B = celldist( :,compare(a,2) );
     end
 end
 
-if sum(fresults,1)/length(fresults) ~=0
+if sum(fresults)/length(fresults) ~=0
     ncut = 1;
     fprintf('Result of proj. test...KEEP \n');
     for a = 1:length(contexts)
