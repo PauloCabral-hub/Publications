@@ -1,11 +1,12 @@
-% Date: 23/02/2024
+% Date: 24/02/2024
+%
 % Description: This script performs the following procedures:
 %
 % 1. Build the GKlab datamatrix from EEG recordings (EEGlab format) of 
 % the goalkeeper game
 % 1. Filter EEG data (EEGlab format) for isolating signal in 1-45 Hz 
-% 2. Performs context tree estimation for a EEG recording (EEGlab format) 
-% associated with the goalkeeper game 
+% 2. Performs context tree estimation USING REAL DATA AS A TEMPLATE FOR
+% CHECKING IF THE TREE ESTIMATION IS CORRECT.
 %
 % Obs.: Previous use of aux_routine1 is advised for removing components
 % not associated with brain activity.
@@ -83,7 +84,7 @@ for ch = 1: last_ch
             aux = aux + 1;
         end
     chain = data(b_trial:e_trial,9)';
-    % TEMPORARY: Overwritting original signals by sinusoids
+    % OVERWRITTING original signals by sinusoids
     sig_len = length(signals{2,1});
         for a = 3:length(chain)
             if isequal(chain(a-1),0)
@@ -103,7 +104,7 @@ for ch = 1: last_ch
                 sig_set{a,1} = cos(w*[1:sig_len]); %#ok<NBRAK>
             end
         end
-    % TEMPORARY
+    % OVERWRITTING original signals by sinusoids
     
     % Estimating tree
     [tau_est, mosaic] = tauest_ftype(alphal, chain, sig_set, proj_num, sample_stretch);
@@ -114,14 +115,12 @@ for ch = 1: last_ch
     tikz_seq = tikz_tree(tau_est, [0:alphal-1], 1); %#ok<NBRAK>
     
     % Storing the tikz tree code
-% NOT WORKING
-%     if tikz_on == 1
-%         aux_str = ['ch' num2str(chan_info(ch).labels) '_est_tree_' ...
-%             'trials' num2str(b_trial) 'to' num2str(e_trial) '_filt' ...
-%             num2str(low_cut) 'to' num2str(high_cut) '.tex'];
-%         standalone_tickztree('', tikz_seq, aux_str);
-%     end
-% NOT WORKING
+    if tikz_on == 1
+        aux_str = ['ch' num2str(chan_info(ch).labels) '_est_tree_' ...
+            'trials' num2str(b_trial) 'to' num2str(e_trial) '_filt' ...
+            num2str(low_cut) 'to' num2str(high_cut) ];
+        standalone_tickztree(tikz_tree_path, tikz_seq, aux_str);
+    end
     
     % Closing diary
     if diary_on == 1

@@ -7,3 +7,8 @@
 
 # Diaries log files
 **.log
+
+# TEX related files
+**.tex
+**.pdf
+**.aux

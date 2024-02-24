@@ -10,7 +10,7 @@
 function standalone_tickztree(save_pathway, string_seq, name)
 
 print_seq = ['\documentclass[tikz, border = 5pt]{standalone} \begin{document}' string_seq ' \end{document}'];
-fid = fopen([save_pathway '/' name '.tex'],'wt');
+fid = fopen([save_pathway name '.tex'],'wt');
 fprintf(fid, '%s', print_seq);
 fclose(fid);
 
