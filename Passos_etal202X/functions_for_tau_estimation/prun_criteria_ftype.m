@@ -21,8 +21,6 @@
 % OUTPUT:
 % ncut    = is set to 1 if the contexts in contexts should not be prunned.
 
-% SOLVE THE PROBLEM HERE
-
 function [ncut, mosaic] = prun_criteria_ftype(contexts, schain, sig_set, proj_num, sample_stretch, mosaic)
 
 % discarding empty contexts
