@@ -1,8 +1,8 @@
 % full_tree = full_tree_with_vertices(alphabet, height)
 %
-% Returns a full vertice tree with height defined in <height> using the al-
-% phabet in the row vector <alphabet>. See balding 2009, for the definition
-% of the the vertice tree.
+% Description: returns a full vertice tree with height defined in 'height' 
+% using the alphabet in the row vector 'alphabet'. See balding 2009, for 
+% the definition of the the vertice tree.
 %
 % INPUT:
 %
