@@ -2,9 +2,10 @@
 % Description: Generates all possible retrievable trees from a sequence
 % sample generated from a probabilistic context tree model.
 
+tic
 % Setting Parameters
 
-height = 4;
+height = 5;
 alphabet = [0 1 2];
 trees_path = '/home/paulo-cabral/Documents/pos-doc/pd_paulo_passos_neuromat/Publications/Passos_etal202X/files_for_reference/';
 tau = 7; seq_length = 100;
@@ -216,5 +217,10 @@ elements = unique(elements,'rows');
 % Use following parameter to acess the trees
 % obs.: must not surpass the number of lines in elements
 
-tree_index = 1;
-curr_tree = full_tree(elements(tree_index,:) == 1);
+ptrees = cell(size(elements,1),1);
+for k = 1:size(elements,1)
+    curr_tree = full_tree(elements(k,:) == 1);
+    ptrees{k,1} = curr_tree;
+end
+
+toc

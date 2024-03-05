@@ -40,7 +40,7 @@ sdist(1) = 45;
     end
 headings = ['\begin{tikzpicture}[thick, scale=0.15]' newline ];
     for k = 1:height
-       headings = [headings '\tikzstyle{level ' num2str(k) '}=[level distance=10cm, sibling distance=' num2str(sdist(k),2)  'cm]'  newline]; %#ok<AGROW>
+       headings = [headings '\tikzstyle{level ' num2str(k) '}=[ultra thick, level distance=10cm, sibling distance=' num2str(sdist(k),2)  'cm]'  newline]; %#ok<AGROW>
     end
 string_seq = [headings '\coordinate' newline string_seq ';' newline]; %#ok<*NASGU>
 
@@ -66,7 +66,7 @@ if label_leafs == 1
                 shift = shift - 2*0.35;
             end
         %testing
-      string_seq = [string_seq '\node [ below of=' w_string ', yshift=' num2str(shift) 'cm, rotate=45, text=blue ]{ \footnotesize{' rlabel '} };' newline]; %#ok<AGROW>
+      string_seq = [string_seq '\node [ below of=' w_string ', yshift=' num2str(shift) 'cm, rotate=45, text=black ]{ \footnotesize{' rlabel '} };' newline]; %#ok<AGROW>
    end
 end
 
