@@ -56,7 +56,7 @@ min_time = 0.300;
 b_trial = 1;
 
 % INSERT which will be the last trial in the estimation procedure
-e_trial = 500;
+e_trial = 1500;
 
 % INSERT the number of projection to be used in prunning decision
 proj_num = 5000; % 5000 is the default number of projections.
@@ -74,7 +74,7 @@ for ch = 1: last_ch
         eval (['diary ' diary_path diary_name num2str(chan_info(ch).labels) '_subj' num2str(subj_num) '.log'])
     end
     
-    % Selecting the valid trials [1]*
+    % Selecting the valid trials
     [valids, signals, sample_stretch] = valid_functionals(data, EEG.srate, min_time, EEG, 0, 0);
     aux = 1;
     sig_set = cell(e_trial-b_trial+1,1);
@@ -85,24 +85,27 @@ for ch = 1: last_ch
     chain = data(b_trial:e_trial,9)';
     
     % Estimating tree
-    [tau_est, mosaic] = tauest_ftype(alphal, chain, sig_set, proj_num, sample_stretch);
+    [tau_est, ~] = tauest_ftype(alphal, chain, sig_set, proj_num, sample_stretch);
     tree_data{ch,1} = tau_est;
-    tree_data{ch,2} = mosaic;
-    
-    % Generating the tikz code for drawing the tree
-    tikz_seq = tikz_tree(tau_est, [0:alphal-1], 1); %#ok<NBRAK>
-    
-    % Storing the tikz tree code
-    if tikz_on == 1
-        aux_str = ['ch' num2str(chan_info(ch).labels) '_est_tree_' ...
-            'trials' num2str(b_trial) 'to' num2str(e_trial) '_filt' ...
-            num2str(low_cut) 'to' num2str(high_cut) ];
-        standalone_tickztree(tikz_tree_path, tikz_seq, aux_str);
+    if exist('summary_repo','var')
+       if check_summary_repo(summary_repo, subj_num, b_trial, e_trial, ch) == 1
+            summary_repo = insert_summary_repo(summary_repo,...
+                subj_num, ch, channels{ch}, tau_est, b_trial, e_trial);
+       end
+    else
+       summary_repo = new_summary_repo();
+       summary_repo = insert_summary_repo(summary_repo,...
+            subj_num, ch, channels{ch}, tau_est, b_trial, e_trial);
     end
+    
     
     % Closing diary
     if diary_on == 1
        diary off
     end
 end
+
+
+
+
 

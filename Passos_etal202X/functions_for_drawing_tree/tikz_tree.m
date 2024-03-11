@@ -40,7 +40,7 @@ sdist(1) = 45;
     end
 headings = ['\begin{tikzpicture}[thick, scale=0.15]' newline ];
     for k = 1:height
-       headings = [headings '\tikzstyle{level ' num2str(k) '}=[ultra thick, level distance=10cm, sibling distance=' num2str(sdist(k),2)  'cm]'  newline]; %#ok<AGROW>
+       headings = [headings '\tikzstyle{level ' num2str(k) '}=[line width=4pt, level distance=10cm, sibling distance=' num2str(sdist(k),2)  'cm]'  newline]; %#ok<AGROW>
     end
 string_seq = [headings '\coordinate' newline string_seq ';' newline]; %#ok<*NASGU>
 

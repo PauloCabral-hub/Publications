@@ -23,6 +23,8 @@
 %              timated tree
 %
 % AUTHOR: Paulo Roberto Cabral Passos Last modified: 18/10/2023
+%
+% Obs.: ELIMINATE MOSAIC OUTPUT
 
 function [tau_est, mosaic] = tauest_ftype(alphal, chain, sig_set, proj_num, sample_stretch)
     mosaic = [];
