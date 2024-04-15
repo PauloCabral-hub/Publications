@@ -14,8 +14,15 @@ addpath(genpath(eeglab_dir));
 
 %% Opening EEGlab files
 
+subj_num = 10;
+if subj_num < 10
+    aux_str = ['0' num2str(subj_num)];
+else
+    aux_str = num2str(subj_num);
+end
+
 % Do not include the forward slash in file_name 
-file_name = 'icadecomposed_PDPauloPassos_vol04.set';
+file_name = ['icadecomposed_PDPauloPassos_vol' aux_str '.set'];
 file_path_p1 = '/home/paulo-cabral/Documents/pos-doc/pd_paulo_passos_neuromat/';
 file_path_p2 = 'Publications/Passos_etal202X/dataset_for_testing/';
 EEG = pop_loadset('filename',file_name,'filepath',[file_path_p1 file_path_p2]);
@@ -47,3 +54,6 @@ end
 
 remove_com = find(maintain_comp == 0);
 EEG = pop_subcomp( EEG, remove_com, 0);
+
+
+save([file_path_p1 file_path_p2 'EEG_subj' aux_str '_clean.mat'])

@@ -1,0 +1,13 @@
+% function_outputs = function_name(function_arguments)
+%
+% DESCRIPTION: function description
+%
+% INPUT:
+%
+% argument1 = argument1 description
+%
+% OUTPUT:
+%
+% output1 = output1 description
+%
+% AUTHOR: author name  DATE: xx/xx/xxxx

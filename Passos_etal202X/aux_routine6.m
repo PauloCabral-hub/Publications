@@ -3,21 +3,40 @@
 % Description: Pending
 
 % Loading the estimated trees
-file_path = '/home/paulo-cabral/Documents/pos-doc/pd_paulo_passos_neuromat/data_repository_09032024/';
-file = 'subj04_EEGtrees_block_and_global.mat';
+subjs = [4:13];
+for a = 1:length(subjs)
+file_path = '/home/paulo-cabral/Documents/pos-doc/pd_paulo_passos_neuromat/Publications/Passos_etal202X/estimations/';
+    if subjs(a) > 9
+       aux_str = 'subj';
+    else
+       aux_str = 'subj0';
+    end
+file = [aux_str num2str(subjs(a)) '_EEGtrees_block_and_global.mat'];
 load([file_path file])
+eval(['summary_repo' num2str(a+3) '= summary_repo;'])
+    if a == 1 
+        eval(['gsummary_repo = summary_repo' num2str(a+3) ';'])
+    else
+        eval(['gsummary_repo = [gsummary_repo ; summary_repo' num2str(a+3) '];'])
+    end
+end
+
 
 % Correcting for empty data in the repository
-if isempty(summary_repo(1).subj_num)
-   summary_repo = summary_repo(2:length(summary_repo));
+a = 1;
+while a <= length(gsummary_repo)
+    if isempty(gsummary_repo(a).subj_num)
+       gsummary_repo(a) = []; 
+    else
+       a = a+1;
+    end
 end
-subj_num = summary_repo(1).subj_num;
 
 % Getting the unique trees
 unique_trees = {};
 aux = 1;
-for a = 1:length(summary_repo) 
-    tree_var = summary_repo(a).tree;
+for a = 1:length(gsummary_repo) 
+    tree_var = gsummary_repo(a).tree;
     if isempty(unique_trees)
        unique_trees{aux} = tree_var;
        aux = aux+1;
@@ -47,11 +66,11 @@ end
 
 % Getting the number in ascending order
 
-for a=1:length(summary_repo)
-    tree_var = summary_repo(a).tree;
+for a=1:length(gsummary_repo)
+    tree_var = gsummary_repo(a).tree;
     for b = 1:length(unique_trees)
         if treesequal(tree_var,unique_trees{b})
-           summary_repo(a).tree_num = find(Ds_asc == b); 
+           gsummary_repo(a).tree_num = find(Ds_asc == b); 
         end
     end
 end
@@ -60,8 +79,8 @@ end
 
 unique_channels = {};
 aux = 1;
-for a = 1:length(summary_repo) 
-    chan_var = summary_repo(a).chan;
+for a = 1:length(gsummary_repo) 
+    chan_var = gsummary_repo(a).chan;
     if isempty(unique_channels)
        unique_channels{aux} = chan_var;
        aux = aux+1;
@@ -79,27 +98,30 @@ for a = 1:length(summary_repo)
     end
 end
 
-% Getting the results
+%% Getting the results
 
 resume_subj = zeros(length(unique_channels),4);
+subj_num = 5;
 
 for a = 1:length(unique_channels)
    chan_var = unique_channels{a};
-   for b = 1:length(summary_repo)
-      if isequal(chan_var, summary_repo(b).chan) 
-         if (summary_repo(b).from == 1) && (summary_repo(b).to == 500)
-             resume_subj(a,1) = summary_repo(b).tree_num;
-         end
-         if (summary_repo(b).from == 501) && (summary_repo(b).to == 1000)
-             resume_subj(a,2) = summary_repo(b).tree_num;             
-         end
-         if (summary_repo(b).from == 1001) && (summary_repo(b).to == 1500)
-             resume_subj(a,3) = summary_repo(b).tree_num;             
-         end
-         if (summary_repo(b).from == 1) && (summary_repo(b).to == 1500)
-             resume_subj(a,4) = summary_repo(b).tree_num;             
-         end         
-      end
+   for b = 1:length(gsummary_repo)
+       if gsummary_repo(b).subj_num == subj_num
+          if isequal(chan_var, gsummary_repo(b).chan) 
+             if (gsummary_repo(b).from == 1) && (gsummary_repo(b).to == 500)
+                 resume_subj(a,1) = gsummary_repo(b).tree_num;
+             end
+             if (gsummary_repo(b).from == 501) && (gsummary_repo(b).to == 1000)
+                 resume_subj(a,2) = gsummary_repo(b).tree_num;             
+             end
+             if (gsummary_repo(b).from == 1001) && (gsummary_repo(b).to == 1500)
+                 resume_subj(a,3) = gsummary_repo(b).tree_num;             
+             end
+             if (gsummary_repo(b).from == 1) && (gsummary_repo(b).to == 1500)
+                 resume_subj(a,4) = gsummary_repo(b).tree_num;             
+             end         
+          end
+       end       
    end
 end
 

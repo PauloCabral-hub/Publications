@@ -58,7 +58,16 @@ B = celldist( :,compare(a,2) );
             fprintf('Processing...performing projection tests: %d %% \n', floor(100*b/proj_num) );
         end
         [proj_vals, proj_labels] = get_projections(A, B, sample_stretch);
-        partial_result = kstest2(proj_vals(proj_labels == 1), proj_vals(proj_labels == 2));
+        % UNDER EVALUATION
+        set1 = proj_vals(proj_labels == 1);
+        set2 = proj_vals(proj_labels == 2);
+        if (~isempty(set1)) && (~isempty(set2))
+            partial_result = kstest2(set1, set2);
+        else
+            partial_result = 0;
+        end
+        % UNDER EVALUATION
+        % partial_result = kstest2(set1, set2);  % ORIGINAL
         results(a,1) = results(a,1) + partial_result;
     end
     fprintf(['Accepted/Rejected Ratio = ' num2str( results(a,1)/proj_num) '\n']);

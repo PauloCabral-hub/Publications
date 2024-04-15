@@ -9,13 +9,13 @@ k=1
 
 while [ $k -le $NUM_FILES ]
 do
-	TO_EVAL1="pdflatex subj_num1_utree${k}.tex && rm *.log *.aux"
-	TO_EVAL2="pdf2svg subj_num1_utree${k}.pdf subj_num1_utree${k}.svg"
-	TO_EVAL3="svgexport subj_num1_utree${k}.svg subj_num1_utree${k}.png"
+	TO_EVAL1="pdflatex tree_num${k}from7.tex && rm *.log *.aux"
+	TO_EVAL2="pdf2svg tree_num${k}from7.pdf tree_num${k}from7.svg"
+	#TO_EVAL3="svgexport tree_num${k}from7.svg tree_num${k}from7.png"
 	eval $TO_EVAL1
 	eval $TO_EVAL2
-	eval $TO_EVAL3
+	#eval $TO_EVAL3
         k=`expr $k + 1`
 done
 
-eval "rm *.pdf *.svg"
+#eval "rm *.pdf"
