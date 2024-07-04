@@ -23,13 +23,20 @@ if new_fig == 1
 end
 
 [channels, splash] = get_splash(chan_info);
+topo_dist = reshape(topo_mat,[],size(topo_mat,2)*size(topo_mat,1));
+topo_range = prctile(topo_dist,50);
+
 
 hold on
 for a = 1:length(channels)
-    plot(splash(a,1),splash(a,2), 'o', 'color', [topo_mat(a,column)/max(topo_mat(:, column)) 0.5 0],...
+    color_grad = topo_mat(a,column)/topo_range;
+    if color_grad > 1
+       color_grad = 1; 
+    end
+    plot(splash(a,1),splash(a,2), 'o', 'color', [color_grad 0.5 0],...
         'MarkerSize',  25, 'LineWidth', 2);
-    text(splash(a,1)-7,splash(a,2), num2str(topo_mat(a,column)), 'color', [topo_mat(a,column)/max(topo_mat(:, column)) 0.5 0]);
-    text(splash(a,1)+15,splash(a,2)-5, chan_info(a).labels, 'color', [topo_mat(a,column)/max(topo_mat(:, column)) 0.5 0]);
+    text(splash(a,1)-7,splash(a,2), num2str(topo_mat(a,column)), 'color', [color_grad 0.5 0]);
+    text(splash(a,1)+15,splash(a,2)-5, chan_info(a).labels, 'color', [ color_grad 0.5 0]);
 end
 axis square
 axis off    
