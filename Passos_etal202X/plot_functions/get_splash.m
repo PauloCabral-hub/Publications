@@ -7,28 +7,28 @@
 %
 % INPUT:
 %
-% EEG = EEG struct from EEGlab
+% chan_info = EEG.chanlocs struct from EEGlab
 %
 % OUTPUT:
 %
 % splash = matrix with the vectors in the description
 % channels = cell with the name of the vectors.
 %
-% AUTHOR: Paulo Roberto Cabral Passos  DATE: 16/07/2024
+% AUTHOR: Paulo Roberto Cabral Passos  DATE: 4/07/2024
 
 
-function [channels, splash] = get_splash(EEG)
+function [channels, splash] = get_splash(chan_info)
 
 channels = {};
-V = zeros(length(EEG.chanlocs),3);
-Cz_coord = [EEG.chanlocs(32).X, EEG.chanlocs(32).Y, 0];
+V = zeros(length(chan_info),3);
+Cz_coord = [chan_info(32).X, chan_info(32).Y, 0];
  
  % Centralizing in Cz
-for a = 1:length(EEG.chanlocs)
-    channels{a} = EEG.chanlocs(a).labels; 
-    V(a,1) = EEG.chanlocs(a).X + (-1)*Cz_coord(1);
-    V(a,2) = EEG.chanlocs(a).Y + (-1)*Cz_coord(2);
-    V(a,3) = EEG.chanlocs(a).Z ;
+for a = 1:length(chan_info)
+    channels{a} = chan_info(a).labels; 
+    V(a,1) = chan_info(a).X + (-1)*Cz_coord(1);
+    V(a,2) = chan_info(a).Y + (-1)*Cz_coord(2);
+    V(a,3) = chan_info(a).Z ;
 end
 
 % Making the minimum Z equal 0
@@ -38,7 +38,7 @@ V(:,3) = V(:,3)+abs(min(V(:,3)));
 h_max = max(V(:,3));
     
     splash = zeros(size(V,1),2);
-    for a = 1:length(EEG.chanlocs)
+    for a = 1:length(chan_info)
        v_p = V(a,1:2);
        if norm(v_p) ~= 0
             u_p = v_p./norm(v_p);

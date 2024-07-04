@@ -7,7 +7,7 @@
 %
 % INPUT:
 %
-% EEG = EEG struct from EEGlab
+% chan_info = EEG.chanlocs struct from EEGlab
 %
 % OUTPUT:
 %
@@ -17,11 +17,11 @@
 % AUTHOR: Paulo Roberto Cabral Passos  DATE: 16/07/2024
 
 
-function [channels, splash] = get_splash(EEG)
+function [channels, splash] = get_splash(chan_info)
 
 channels = {};
-V = zeros(length(EEG.chanlocs),3);
-Cz_coord = [EEG.chanlocs(32).X, EEG.chanlocs(32).Y, 0];
+V = zeros(length(chan_info),3);
+Cz_coord = [EEGchanlocs(32).X, EEG.chanlocs(32).Y, 0];
  
  % Centralizing in Cz
 for a = 1:length(EEG.chanlocs)

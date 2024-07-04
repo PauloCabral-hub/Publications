@@ -24,14 +24,10 @@ end
 
 [channels, splash] = get_splash(chan_info);
 
-hold on
 for a = 1:length(channels)
-    plot(splash(a,1),splash(a,2), 'o', 'color', [topo_mat(a,column)/max(topo_mat(:, column)) 0.5 0],...
-        'MarkerSize',  25, 'LineWidth', 2);
-    text(splash(a,1)-7,splash(a,2), num2str(topo_mat(a,column)), 'color', [topo_mat(a,column)/max(topo_mat(:, column)) 0.5 0]);
-    text(splash(a,1)+15,splash(a,2)-5, chan_info(a).labels, 'color', [topo_mat(a,column)/max(topo_mat(:, column)) 0.5 0]);
+    text(splash(a,1),splash(a,2), num2str(topo_ma)
 end
-axis square
-axis off    
+
+    
 end
 
