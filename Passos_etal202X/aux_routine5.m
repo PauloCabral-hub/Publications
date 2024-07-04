@@ -1,44 +1,53 @@
-% Date: 06/03/2024
-%
-% Description: This script plot all possible trees till size 5 in order of
-% distance from the tree of the stimuli
-%
-% 1. Calculate the distance from the tree of stimuli
-% 2. Plot the trees in ascending order of distance
+% Graphic parameters
 
-
-close all
 set(0,'defaultfigurecolor',[1 1 1])
-work_path = '/home/paulo-cabral/Documents/pos-doc/pd_paulo_passos_neuromat/Publications/Passos_etal202X';
-addpath(genpath(work_path))
+set(0, 'defaultFigureRenderer', 'painters')
 
-load([work_path '/files_for_reference/num7_possibletrees/num7_possibletrees.mat'])
+%% Loading prameters
 
-Ds = zeros(length(ptrees),1);
-Ss = Ds;
-[contexts, ~] = build_treePM ([work_path '/files_for_reference/num7.tree']);
 
-for k = 1:length(ptrees)
-  Ds(k,1) = balding_distance(contexts,ptrees{k,1}); 
+repo_path = 'C:\Users\PauloCabral\Documents\pos-doc\code_and_data\Publications\Passos_etal202X\estimations/';
+path_to_rtree = 'C:\Users\PauloCabral\Documents\pos-doc\code_and_data\Publications\Passos_etal202X\files_for_reference\';
+from = 4;
+to = 13;
+rtree = 7;
+
+% Loading data
+
+gsummary_repo = load_est_trees(from, to, repo_path );
+
+% Getting the the tree numbers
+
+gsummary_repo = order_tree_distance(path_to_rtree,rtree, gsummary_repo);
+
+%% Visualizing parameters
+%subj_num = 13;
+new_fig = 1;
+chan_info_path = 'C:\Users\PauloCabral\Documents\pos-doc\code_and_data\Publications\Passos_etal202X\dataset_for_testing\';
+
+% Getting the topomat
+
+gtopo_mat = zeros(31,4,10);
+for a = 1:10
+    subj_num = 3+a;
+    [topo_mat, chan_info] = get_topo_mat(gsummary_repo, subj_num, chan_info_path);
+    gtopo_mat(:,:,a) = topo_mat;
 end
-[~, Ds_asc] = sort(Ds);
 
-figure
-path_comp = '/files_for_reference/num7_possibletrees';
-tree_xdim = 0.175; tree_ydim = 0.30;
-y_pos = 0.75;
-shift = 0.05;
-for k = 0:length(ptrees)-1
-   file_name = ['/num7variant' num2str(Ds_asc(k+1)) '.png'];
-   tree_img = imread([work_path path_comp file_name]);
-   delta_x = 0.01;
-   aux = rem(k,5)+1;
-   x_pos = shift + (aux-1)*(tree_xdim + delta_x);
-   if (aux == 1) && (k ~=0)
-      y_pos = y_pos - 0.25; 
-   end
-   axes('pos',[ x_pos y_pos tree_xdim tree_ydim ])
-   imshow(tree_img)
-   text(0,0.,num2str(k),'FontSize', 20,'Color', 'b')
+mtopo_mat = zeros(31,4);
+for a = 1:31
+    for b = 1:4
+       mtopo_mat(a,b) = round(  median( gtopo_mat(a,b,:) )  ); 
+    end
 end
 
+
+% Plotting the topomat
+
+staircase_plot(chan_info, topo_mat(:,3), new_fig)
+subplot(1,2,1)
+plot(p,logit)
+title('$ln \frac{p}{1-p} $','Interpreter','Latex','FontSize',15)
+subplot(1,2,2)
+plot(logit,p)
+title('Inversa','FontSize',15)
