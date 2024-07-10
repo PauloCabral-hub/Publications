@@ -13,7 +13,7 @@
 %% Setting the paths
 addpath(genpath('/home/guestmae/paulocabral-local/scripts/Passos_etal202X'))
 origin_path = '/var/tmp/paulo_neuromat_data/icadecomposed_data';
-dest_path = '/var/tmp/paulo_neuromat_data/tree_data';
+dest_path = origin_path;
 
 subjects = [51 52 53 54 55 56];
 
@@ -26,6 +26,8 @@ for s = 1:length(subjects)
     tree_num = 7;
     % INSERT the length of the alphabet (different stimuli)
     alphal = 3;
+    % INSERT the block to be processed
+    b = 1;
 
     if subj_num < 10
        aux_str = ['0' num2str(subj_num)];
@@ -33,7 +35,7 @@ for s = 1:length(subjects)
        aux_str = num2str(subj_num);
     end
 
-    load([origin_path '/EEG_subj' aux_str '_clean.mat'])
+    load([origin_path '/EEG_subj' aux_str '_clean.mat'], 'EEG')
     %% Filter parameters
 
     % INSERT high-pass cut-off frequency
@@ -41,12 +43,12 @@ for s = 1:length(subjects)
     % INSERT low-pass cut-off frequency
     high_cut = 45; 
     %% Building GKlab data matrix
-    if str2num(subj_num) >= 50 %#ok<ST2NM>
+    if subj_num >= 50
         correction = 0;
     else
         correction = 1;
     end
-    [data, channels, EEGtimes, EEGsignals] = EEG_data_matrix(EEG, ntrials, EEG.srate, str2num(subj_num), tree_num, correction); %#ok<ST2NM>
+    [data, channels, ~ , EEGsignals] = EEG_data_matrix(EEG, ntrials, EEG.srate, subj_num, tree_num, correction); 
     
     % REMOVING EOG and EMG for the following processing
     EEGsignals([32 33],:) = [];
@@ -55,6 +57,7 @@ for s = 1:length(subjects)
     %% Filtering EEG recordings
     fEEGsignals = filtEEGdata(EEGsignals, EEG.srate,low_cut,high_cut);
     EEG.data = fEEGsignals;
+    clear fEEGsignals
     %% Tree estimation parameters
     % INSERT the minimum time of response to consider for tree estimation [1]*
     min_time = 0.300;
@@ -62,60 +65,61 @@ for s = 1:length(subjects)
     bs = [1 501 1001 1];
     es = [500 1000 1500 1500];    
     
-    for b = 1:length(bs)
-        % INSERT from which trial the tree estimation should start
+    % INSERT from which trial the tree estimation should start
 
-        b_trial = bs(b);
+    b_trial = bs(b);
 
-        % INSERT which will be the last trial in the estimation procedure
-        e_trial = es(b);
+    % INSERT which will be the last trial in the estimation procedure
+    e_trial = es(b);
 
-        % INSERT the number of projection to be used in prunning decision
-        proj_num = 5000; 
+    % INSERT the number of projection to be used in prunning decision
+    proj_num = 5000; 
+
+    % INSERT the last EEG channel
+    last_ch = 32;
+
+    % [1]* trials in which the response times (sec) are inferior to that parameter
+    % will not be included in the analysis. 
+    %% Tree estimation
+    disp(4)
+
+    tree_data = cell(last_ch,2);
         
-        % INSERT the last EEG channel
-        last_ch = 32;
-
-        % [1]* trials in which the response times (sec) are inferior to that parameter
-        % will not be included in the analysis. 
-        %% Tree estimation
-        disp(4)
-
-        tree_data = cell(last_ch,2);
-        for ch = 1: last_ch
-            try
-                load([dest_path '/subj' aux_str '_EEGtrees_block_and_global.mat'])
-            catch ME
-                no_file = strcmp(ME.identifier, 'MATLAB:load:couldNotReadFile');
-                if no_file == 1
-                    disp("no_file")
-                end
+    for ch = 1:last_ch 
+        disp(['going through channel ' num2str(ch)])
+        try
+            load([dest_path '/subj' aux_str '_EEGtrees_block_and_global_B' num2str(b) '.mat'])
+        catch ME
+            no_file = strcmp(ME.identifier, 'MATLAB:load:couldNotReadFile');
+            if no_file == 1
+                disp("no_file")
             end
-            % Selecting the valid trials
-            [valids, signals, sample_stretch] = valid_functionals(data, EEG.srate, min_time, EEG, 0, 0);
-            aux = 1;
-            sig_set = cell(e_trial-b_trial+1,1);
-                for a = b_trial:e_trial
-                    sig_set{aux,1} = signals{a,ch};
-                    aux = aux + 1;
-                end
-            chain = data(b_trial:e_trial,9)';
-
-            % Estimating tree
-            [tau_est, ~] = tauest_ftype(alphal, chain, sig_set, proj_num, sample_stretch);
-            tree_data{ch,1} = tau_est;
-            if exist('summary_repo','var')
-               if check_summary_repo(summary_repo, subj_num, b_trial, e_trial, ch) == 1
-                    summary_repo = insert_summary_repo(summary_repo,...
-                        subj_num, ch, channels{ch}, tau_est, b_trial, e_trial);
-               end
-            else
-               summary_repo = new_summary_repo();
-               summary_repo = insert_summary_repo(summary_repo,...
-                    subj_num, ch, channels{ch}, tau_est, b_trial, e_trial);
-            end
-            save([dest_path '/subj' aux_str '_EEGtrees_block_and_global.mat'])
         end
+        % Selecting the valid trials
+        [valids, signals, sample_stretch] = valid_functionals(data, EEG.srate, min_time, EEG, 0, 0);
+        aux = 1;
+        sig_set = cell(e_trial-b_trial+1,1);
+            for a = b_trial:e_trial
+                sig_set{aux,1} = signals{a,ch};
+                aux = aux + 1;
+            end
+        chain = data(b_trial:e_trial,9)';
+
+        % Estimating tree
+        [tau_est, ~] = tauest_ftype(alphal, chain, sig_set, proj_num, sample_stretch); %#ok<ASGLU>
+        tau_est = [];
+        tree_data{ch,1} = tau_est;
+        if exist('summary_repo','var')
+           if check_summary_repo(summary_repo, subj_num, b_trial, e_trial, ch) == 1
+                summary_repo = insert_summary_repo(summary_repo,...
+                    subj_num, ch, channels{ch}, tau_est, b_trial, e_trial);
+           end
+        else
+           summary_repo = new_summary_repo();
+           summary_repo = insert_summary_repo(summary_repo,...
+                subj_num, ch, channels{ch}, tau_est, b_trial, e_trial);
+        end
+        save([dest_path '/subj' aux_str '_EEGtrees_block_and_global_B' num2str(b) '.mat'],'summary_repo')
     end   
     clearvars -except origin_path dest_path subjects
 end

@@ -33,6 +33,9 @@ for a = 1:length(channels)
     if color_grad > 1
        color_grad = 1; 
     end
+    if isnan(color_grad)
+       color_grad = 0; 
+    end
     plot(splash(a,1),splash(a,2), 'o', 'color', [color_grad 0.5 0],...
         'MarkerSize',  25, 'LineWidth', 2);
     text(splash(a,1)-7,splash(a,2), num2str(topo_mat(a,column)), 'color', [color_grad 0.5 0]);

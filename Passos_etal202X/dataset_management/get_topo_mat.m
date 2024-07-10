@@ -6,7 +6,8 @@
 %
 % gsummary_repo = as returned by order_tree_distance
 % subj_num = the number of the subject in the set of gsummary_repo
-% chan_desc = structure as provided by EEGlab
+% chan_desc_path = path to the structure with channel information comming
+% from EEGlab
 %
 % OUTPUT:
 %
