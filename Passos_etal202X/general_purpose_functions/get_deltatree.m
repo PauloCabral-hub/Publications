@@ -26,13 +26,13 @@
 
 function [delta_topomat, rect_deltatopo] = get_deltatree(gsummary_repo, subj_num, chan_info_path, from, to)
 
-[topo_mat, ~ ] = get_topo_mat(gsummary_repo, subj_num, chan_info_path);
+[topo_mat, ~ ] = get_topo_mat(gsummary_repo, subj_num, 3, chan_info_path);
     
     delta_topomat = [];
     for a = (from+1):to
         delta_topomat = [delta_topomat, (topo_mat(:,a)-topo_mat(:,a-1))];
     end
-    rect_deltatopo = delta_topomat >= 0;
+    rect_deltatopo = delta_topomat > 0;
 
 end
 

@@ -1,4 +1,4 @@
-% [topo_mat, topo_vec] = get_topo_mat(gsummary_repo, subj_num, chan_desc_path)
+% [topo_mat, topo_vec] = get_topo_mat(gsummary_repo, subj_num, max_block, chan_desc_path)
 %
 % DESCRIPTION: returns a matrix for plotting using function staircase_plot.
 %
@@ -6,6 +6,7 @@
 %
 % gsummary_repo = as returned by order_tree_distance
 % subj_num = the number of the subject in the set of gsummary_repo
+% max_block = maximum block to take into account
 % chan_desc_path = path to the structure with channel information comming
 % from EEGlab
 %
@@ -19,7 +20,7 @@
 %
 % AUTHOR: Paulo Roberto Cabral Passos  DATE: 16/04/2024
 
-function [topo_mat, chan_desc] = get_topo_mat(gsummary_repo, subj_num, chan_desc_path)
+function [topo_mat, chan_desc] = get_topo_mat(gsummary_repo, subj_num, max_block, chan_desc_path)
 
 load([chan_desc_path '/chan_description.mat'])
 
@@ -32,7 +33,7 @@ while aux ~= 0
 end
 
 
-bnum = max([gsummary_repo.block]);
+bnum = max_block;
 topo_mat = zeros(length(chan_desc),bnum);
 
 
