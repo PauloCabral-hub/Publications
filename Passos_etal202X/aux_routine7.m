@@ -3,6 +3,7 @@
 
 subjects = [51 52 54 55 56];
 path_to_files = "/home/paulo/Documents/Publications/Passos_etal202X/data_files/";
+num_of_blocks = 3;
 fname_prefix = "subj";
 fname_sufix = "_EEGtrees_block_and_global";
 
@@ -13,7 +14,7 @@ for s = 1:length(subjects)
     else
         aux = num2str(subj);
     end
-    for b = 1:3
+    for b = 1:num_of_blocks
         load( strcat( path_to_files, fname_prefix, aux, fname_sufix, "_B", num2str(b), ".mat"), "summary_repo" );
         cur_summary = summary_repo;
         try

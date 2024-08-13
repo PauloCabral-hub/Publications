@@ -1,5 +1,6 @@
 % Description: takes the EEG from the list of subjects, build the data
-% matrices and save them in a sigle struct
+% matrices and save them in a sigle struct to be used for analysing the
+% behavioral data.
 
 % HEADINGS
 ntrials = 1500;
