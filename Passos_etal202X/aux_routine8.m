@@ -25,10 +25,8 @@ for s = subjects
     fname = ['EEG_subj' aux_num '_clean.mat'];
     load ([path_to_files fname], 'EEG')
     [data, ~, ~, ~] = EEG_data_matrix(EEG, ntrials, EEG.srate, aux, tree_num, correction);
-    if size(data,1) > ntrials
-       disregard = size(data,1) - ntrials +1;
-       data = data(disregard:end,:);
-    end
+    valid = data(:,3) == 0; valid = ~valid;
+    data = data(valid,:);
     group_data{aux,1} = data; 
     aux = aux+1;    
 end

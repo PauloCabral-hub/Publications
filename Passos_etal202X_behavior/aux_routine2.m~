@@ -1,0 +1,14 @@
+% DESCRIPTION: This routine calculates the success rate of each participant
+% in the sample
+
+% Loading data
+load('/home/paulo/Documents/Publications/Passos_etal202X_behavior/data/data_1strun.mat')
+
+% Parameter definitions
+tau = 7;
+from = 1;
+till = 1500;
+
+
+for a = 1:
+[chain_seq, resp_seq, rt_seq] = get_seqandresp(data,tau, id, from, till)
