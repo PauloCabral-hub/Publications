@@ -2,8 +2,12 @@
 
 % HEADINGS
 alphal = 3;
-rtree = 7;
+tau = 7;
 path_to_rtree = '/home/paulo/Documents/Publications/Passos_etal202X_behavior/files_for_reference';
+
+
+% Loading data
+load('/home/paulo/Documents/Publications/Passos_etal202X_behavior/data/data.mat')
 
 % Estimating a context tree for each block
 
@@ -18,10 +22,8 @@ dist_repo = cell(length(subjects),size(blocks,1));
 
 for s = 1:length(subjects)
    for b = 1:size(blocks,1)
-      data = group_data{s,1};
-      real_chain = data(blocks(b,1):blocks(b,2),7)'; 
-      chain = data(blocks(b,1):blocks(b,2),9)';
-      tree_repo{s,b} = tauest_real(alphal, real_chain, chain);
+      [chain, ~, real_chain] = get_seqandresp(data,tau, s, blocks(b,1), blocks(b,2) );
+      tree_repo{s,b} = tauest_real(alphal, real_chain', chain');
    end
 end
 
@@ -37,7 +39,7 @@ for a = 1:size(tree_repo,2)
    end
 end
 
-dorder_tree_repo = order_distances(path_to_rtree, rtree, vec_tree_repo);
+dorder_tree_repo = order_distances(path_to_rtree, tau, vec_tree_repo);
 
 new_dorder = zeros(size(tree_repo,1),size(tree_repo,2));
 
