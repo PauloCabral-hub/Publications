@@ -19,7 +19,8 @@
 % ncut    = is set to 1 if the contexts in contexts should not be prunned.
 %
 % AUTHOR: Paulo Roberto Cabral Passos   MODIFIED: 02/08/2023
-
+%
+% ATTENTION: INSIDE MODIFICATION LINES: 57:63
 
 function ncut = prun_criteria(contexts,schain, rtchain)
 
@@ -50,10 +51,17 @@ compare = combnk(1:size(contexts,2),2);
 results = zeros(size(compare,1),1);
 
 
-for a = 1:size(compare,1)
-x = celldist{1,compare(a,1)};
-y = celldist{1,compare(a,2)};
-results(a,1) = kstest2(x,y);
+for a = 1:size(compare,1)results(a,1) = kstest2(x,y);
+    x = celldist{1,compare(a,1)};
+    y = celldist{1,compare(a,2)};
+    % INSIDE MODIFICATION
+    x = x(x < 1000);
+    y = y(y < 1000);
+    if ~isempty(x) && ~isempty(y)
+      results(a,1) = kstest2(x,y);  
+    end
+    % INSIDE MODIFICATION
+    % results(a,1) = kstest2(x,y);   % BACK-UP LINE
 end
 
 if sum(results,1)/length(results) ~=0
