@@ -51,7 +51,7 @@ compare = combnk(1:size(contexts,2),2);
 results = zeros(size(compare,1),1);
 
 
-for a = 1:size(compare,1)results(a,1) = kstest2(x,y);
+for a = 1:size(compare,1)
     x = celldist{1,compare(a,1)};
     y = celldist{1,compare(a,2)};
     % INSIDE MODIFICATION
