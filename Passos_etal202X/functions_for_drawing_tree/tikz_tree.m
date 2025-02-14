@@ -18,6 +18,12 @@
 
 function string_seq = tikz_tree(tree, alphabet, label_leafs)
 
+% table for defining the tikz tree parameters
+
+tikz_dpars = [7.5, 33.75; 6.25 11.25; 5 3.75; 3.75 1.25; 2.5 0.475];
+
+
+
 height = 0;
     for k = 1:length(tree)
         if length(tree{1,k}) > height
@@ -33,14 +39,10 @@ full_tree = full_tree_with_vertices(alphabet, height);
 [string_seq, ~] = write_tree([], full_tree, [], alphabet, vtree);
 
 % building the headings
-sdist = zeros(height,1);
-sdist(1) = 45;
-    for k = 2:height
-       sdist(k) = (sdist(k-1)-0.05*sdist(k-1))/3;
-    end
+
 headings = ['\begin{tikzpicture}[thick, scale=0.15]' newline ];
     for k = 1:height
-       headings = [headings '\tikzstyle{level ' num2str(k) '}=[line width=4pt, level distance=10cm, sibling distance=' num2str(sdist(k),2)  'cm]'  newline]; %#ok<AGROW>
+       headings = [headings '\tikzstyle{level ' num2str(k) '}=[line width=4pt, level distance=' num2str(tikz_dpars(k,1),2) 'cm, sibling distance=' num2str(tikz_dpars(k,2),3)  'cm]'  newline]; %#ok<AGROW>
     end
 string_seq = [headings '\coordinate' newline string_seq ';' newline]; %#ok<*NASGU>
 

@@ -54,7 +54,8 @@ for k = 1:length(tree_b)
     end
 end
 
-z = round(length(alphabet)^(-3/2),3);
+z = 0.5;
+% z = round(length(alphabet)^(-3/2),3);
 
 d = 0;
 for k = 1:length(full_tree)

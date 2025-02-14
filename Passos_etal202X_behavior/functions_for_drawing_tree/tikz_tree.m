@@ -8,6 +8,7 @@
 % alphabet     = row vector containing in each column  a  different  number
 %              that composes the leafs.
 % label_leafs  = insert leaf label if set to 1.
+% lin_width    = set the width of the tree lines
 % 
 %
 % OUTPUT:
@@ -16,7 +17,13 @@
 %
 % AUTHOR: Paulo Roberto Cabral Passos   MODIFIED: 04/08/2023
 
-function string_seq = tikz_tree(tree, alphabet, label_leafs)
+function string_seq = tikz_tree(tree, alphabet, label_leafs, lin_width)
+
+% table for defining the tikz tree parameters
+
+tikz_dpars = [7.5, 33.75; 6.25 11.25; 5 3.75; 3.75 1.25; 2.5 0.475];
+
+
 
 height = 0;
     for k = 1:length(tree)
@@ -33,9 +40,10 @@ full_tree = full_tree_with_vertices(alphabet, height);
 [string_seq, ~] = write_tree([], full_tree, [], alphabet, vtree);
 
 % building the headings
+
 headings = ['\begin{tikzpicture}[thick, scale=0.15]' newline ];
     for k = 1:height
-       headings = [headings '\tikzstyle{level ' num2str(k) '}=[level distance=6cm, sibling distance=9cm]'  newline]; %#ok<AGROW>
+       headings = [headings '\tikzstyle{level ' num2str(k) '}=[line width=' num2str(lin_width) 'pt, level distance=' num2str(tikz_dpars(k,1),2) 'cm, sibling distance=' num2str(tikz_dpars(k,2),3)  'cm]'  newline]; %#ok<AGROW>
     end
 string_seq = [headings '\coordinate' newline string_seq ';' newline]; %#ok<*NASGU>
 
@@ -52,7 +60,16 @@ if label_leafs == 1
           end
           w_string = w_string(1:end-1);
       end
-      string_seq = [string_seq '\node [ below of=' w_string ', yshift=0.75cm ]{' replace(num2str(w),' ', '') '};' newline]; %#ok<AGROW>
+        %testing
+            rlabel = replace(num2str(w),' ', '');
+            shift = 0.75;
+            if str2num(rlabel(1)) == 1
+                shift = shift - 1*0.35;
+            elseif str2num(rlabel(1)) == 2
+                shift = shift - 2*0.35;
+            end
+        %testing
+      string_seq = [string_seq '\node [ below of=' w_string ', yshift=' num2str(shift) 'cm, rotate=45, text=black ]{ \footnotesize{' rlabel '} };' newline]; %#ok<AGROW>
    end
 end
 
