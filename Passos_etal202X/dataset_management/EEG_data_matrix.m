@@ -29,22 +29,37 @@
 
 function [data, channels, EEGtimes, EEGsignals] = EEG_data_matrix(ALLEEG, ntrials, fs, idnum, tau, correction)
 
+
+type_events = cell(length(ALLEEG.event),1);
+code_events = cell(length(ALLEEG.event),1);
+
+for a = 1:length(ALLEEG.event)
+    type_event{a,1} = ALLEEG.event(a).type;
+    code_event{a,1} = ALLEEG.event(a).code;
+end
+
+if length(unique(type_event)) > length(unique(code_event))
+   for a = 1:length(ALLEEG.event)
+      ALLEEG.event(a).code = ALLEEG.event(a).type; 
+   end
+end
+
 if correction == 1
    workwith_corrected = data_correction(ALLEEG.event);
    N = length(workwith_corrected);
-   if workwith_corrected(N).type(1) ~= 'D' % in case it ends with the goalkeeper event
+   if workwith_corrected(N).code(1) ~= 'D' % in case it ends with the goalkeeper event
       workwith_corrected(N+1) = workwith_corrected(N);
       workwith_corrected(N+1).code = 'D  3';
-      workwith_corrected(N+1).type = 'D  3';
       workwith_corrected(N+1).latency = ALLEEG.pnts;
    end
 else
    workwith_corrected = ALLEEG.event;
 end
+
 % Counting the number of trials
 trials = 0;
 for a = 1:length(workwith_corrected)
-    if strcmp(workwith_corrected(a).type, 'G  1')
+    if strcmp(workwith_corrected(a).code, 'G  1')
        trials = trials+1;
     end
 end
@@ -72,13 +87,13 @@ data(:,6) = idnum*ones(ntrials,1);
 
 warmup = trials-ntrials; count = 0; rcount = 0;
 for a = 1:length(workwith_corrected)   
-    if strcmp(workwith_corrected(a).type, 'G  1')
+    if strcmp(workwith_corrected(a).code, 'G  1')
        count = count +1; 
     end
     if count > warmup
-       if ~strcmp(workwith_corrected(a).type, 'G  1')
+       if ~strcmp(workwith_corrected(a).code, 'G  1')
              %%%%%% Getting the trial initiation by the Game and Response latency  %%%%%%
-          if strcmp(workwith_corrected(a).type(1), 'G') && strcmp(workwith_corrected(a+1).type(1), 'G')
+          if strcmp(workwith_corrected(a).code(1), 'G') && strcmp(workwith_corrected(a+1).code(1), 'G')
              rcount = rcount+1;
                     %%%% Defining signal latencies %%%%
              data(rcount,10) = workwith_corrected(a).latency;
@@ -87,15 +102,15 @@ for a = 1:length(workwith_corrected)
              % ALTERNATIVE: USING THE GOALKEEPER TO GET THE RESP. TIME
              data(rcount,11) = workwith_corrected(a-1).latency;
                     %%%% --------------------- %%%%
-             if workwith_corrected(a).type(4) == '2'
+             if workwith_corrected(a).code(4) == '2'
                 data(rcount,9) = 0;
-             elseif workwith_corrected(a).type(4) == '4'
+             elseif workwith_corrected(a).code(4) == '4'
                 data(rcount,9) = 1;
              else
                 data(rcount,9) = 2;    
              end
              %%%%%%% Getting the trial the appearence of the arrows
-             if strcmp(workwith_corrected(a-2).type, 'D  2')
+             if strcmp(workwith_corrected(a-2).code, 'D  2')
                  data(rcount,12) = workwith_corrected(a-2).latency;
              else
                 data(rcount,12) = workwith_corrected(a-1).latency;    
@@ -103,12 +118,12 @@ for a = 1:length(workwith_corrected)
              %%%%%%%
              %%%%%%% Getting the begining of the fb (13)
              % ALTERNATIVE: USING THE GOALKEEPER TO GET THE RESP. TIME
-             if (a+2 <= length(workwith_corrected)) && strcmp(workwith_corrected(a+2).type,'D  3')
+             if (a+2 <= length(workwith_corrected)) && strcmp(workwith_corrected(a+2).code,'D  3')
                 data(rcount,13) = workwith_corrected(a+2).latency; 
              end
              % ALTERNATIVE: USING THE GOALKEEPER TO GET THE RESP. TIME
              %%%%%%% Getting the end of the fb (14)
-             if (a+4 <= length(workwith_corrected)) && strcmp(workwith_corrected(a+4).type,'D  1')
+             if (a+4 <= length(workwith_corrected)) && strcmp(workwith_corrected(a+4).code,'D  1')
                 data(rcount,14) = workwith_corrected(a+4).latency;
              else
                 data(rcount,14) = workwith_corrected(length(workwith_corrected)).latency; 
@@ -122,16 +137,16 @@ end
 
 warmup = trials-ntrials; count = 0; rcount = 0;
 for a = 1:length(workwith_corrected)   
-    if strcmp(workwith_corrected(a).type, 'G  1')
+    if strcmp(workwith_corrected(a).code, 'G  1')
        count = count +1; 
     end
     if count > warmup
-       if ~strcmp(workwith_corrected(a).type, 'G  1')
-          if strcmp(workwith_corrected(a).type(1), 'G') && (~strcmp(workwith_corrected(a+1).type(1), 'G'))
+       if ~strcmp(workwith_corrected(a).code, 'G  1')
+          if strcmp(workwith_corrected(a).code(1), 'G') && (~strcmp(workwith_corrected(a+1).code(1), 'G'))
              rcount = rcount+1;
-             if workwith_corrected(a).type(4) == '2'
+             if workwith_corrected(a).code(4) == '2'
                 data(rcount,8) = 0;
-             elseif workwith_corrected(a).type(4) == '4'
+             elseif workwith_corrected(a).code(4) == '4'
                 data(rcount,8) = 1;
              else
                 data(rcount,8) = 2;    
@@ -150,7 +165,16 @@ end
 EEGtimes = ALLEEG.times;
 EEGsignals = ALLEEG.data;
 
-% Data columns 10-14 quicksheet
+% Columns quicksheet
+% 1 indicates the group to which the subject is associated
+% 2 indicates the day in which the subject played the goalkeeper game
+% 3 indicates the trial number 
+% 4 indicates the step associated to the trial
+% 5 indicates the tree played by the subject
+% 6 indicates the alternative ID of the subject in the matrix
+% 7 indicates the response time of the subject in the trial
+% 8 indicates the goalkeeper sequence
+% 9 indicates the penalty taker sequence
 % 10 indicates the momment of the response according to game marker
 % 11 idicates the trial initiation according to game marker
 % 12 indicates arrow appearance according to display marker
