@@ -1,5 +1,4 @@
 # Matlab datafiles
-**.mat
 
 # EEGlab datasets
 **.fdt
@@ -13,8 +12,12 @@
 **.pdf
 **.aux
 **.svg
-**.png
 
 # Folders
 /home/paulo-cabral/Documents/pos-doc/pd_paulo_passos_neuromat/Publications/Passos_etal202X/python_code/virtual/
 /home/paulo/Documents/Publications/SeqROCTM-Matlab-Toolbox/
+
+# Specific files
+Passos_etal202X_behavior/data/jdata.mat
+Passos_etal202X_behavior/data/modes_data.mat
+Passos_etal202X_behavior/data/trees_by_block.mat
