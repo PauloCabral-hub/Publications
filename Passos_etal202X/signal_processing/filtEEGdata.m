@@ -1,4 +1,4 @@
-% fEEGsignals = filtEEGdata(EEGsignals,fs,low_cut,upper_cut)
+% fEEGsignals = filtEEGdata(EEGsignals,fs,low_cut,upper_cut, exclude_chs)
 %
 % The function receives the matrix EEGsignals in which each line
 % corresponds to the time series of a given channel and returns the
@@ -9,6 +9,8 @@
 % fs = sampling frequency
 % low_cut = frequency to be used in the high-pass filter
 % uppercut = frequency to be used in the low-pass filter
+% exclude_chs = row vector containing the indexes of the channels to exclude
+% from the analysis
 %
 % OUTPUT:
 % fEEGsignals = corresponds to EEGsingals filtered according to the given
@@ -16,12 +18,14 @@
 %
 % date: 13/04/2022    author: Paulo Roberto Cabral Passos
 
-function fEEGsignals = filtEEGdata(EEGsignals,fs,low_cut,upper_cut)
+function fEEGsignals = filtEEGdata(EEGsignals,fs,low_cut,upper_cut, exclude_chs)
 
 fEEGsignals = zeros(size(EEGsignals,1), size(EEGsignals,2));
 
 for a = 1:size(EEGsignals,1)
-    
+    if ismember(a,exclude_chs)
+       continue 
+    end
 sig = double(EEGsignals(a,:));
 
 % High-pass filtering

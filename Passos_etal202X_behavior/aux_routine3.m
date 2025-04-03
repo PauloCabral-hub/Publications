@@ -2,11 +2,11 @@
 % fashion described in Cabral-Passos 2024
 
 % Loading data
-load('/home/paulo/Documents/Publications/Passos_etal202X_behavior/data/data.mat')
+data = jdata;
 
 % Defining paramenters
 tau = 7;
-tree_file_address = '/home/paulo/Documents/Publications/Passos_etal202X_behavior/files_for_reference/num7.tree';
+tree_file_address = 'C:\Users\Cabral\Documents\pos_doc\Publications\Passos_etal202X_behavior\files_for_reference\num7.tree';
 num_of_subj = max(data(:,6));
 tau_cardinal = 5;
 from = 1;
@@ -69,7 +69,9 @@ for a = 1: length(order_ctxs)
     group_data = [ group_data; a*ones(gvec_size,1) ]; 
 end
 
-boxplot(info_data,group_data)
+figure
+sbox_varsize(group_data, info_data,  'contexts(w)', '$T_{w,f}-T_{w,s}$', [], {'2'; '21'; '0'; '01'; '11'}, 0.05, 0, [])
+axis square
 
 % Getting the statistics
 
