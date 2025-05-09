@@ -29,7 +29,7 @@ addpath(genpath(eeglab_address))
 
 %% Cleaning directories from the list of files
 
-list_files = get_folder_fdtfiles(eeg_data_address);
+list_files = get_folder_fdtfiles(eeg_data_address); % substitute for <file_list_with_ext> in a near future.
 
 %% Listing and eliminating subjects
 
@@ -48,15 +48,25 @@ corrupted = check_corruption(repo);
 
 [gerp, ierp_easy_access, gerp_test_ref,...
     gcerp, icerp_easy_access, gcerp_test_ref] = erp_summary(repo,...
-    'd4','d3',0.75,'right',tree_file_address, 0.005);
+    'd4','d3',0.75,'right',tree_file_address, 0.05);
 
 %% Estimating the arrow latencies
 
 [ar_lat_estimate] = est_arrow_latency(repo);
 
+%% Loading electrode data
+
+montage_folder = 'C:\Users\Cabral\Documents\pos_doc\Publications\Passos_etal202X\montage_info';
+montage_name = 'montage_eeg32';
+montage_version = '01';
+
+[electrodes, emap] = electrode_mapping(montage_folder, montage_name,montage_version);
+
 %% Visualizing the data group data
 
-gv_erp_plot(gerp, ierp_easy_access, gerp_test_ref, electrodes, emap, 16, 'right', srate, [], [0 -6], [-1 1]);
+ar_lat_estimate = [];
+
+gv_erp_plot(gerp, ierp_easy_access, gerp_test_ref, electrodes, emap, 0, 'right', srate, ar_lat_estimate, [0 0.8], [-2 2]);
 
 %% Plotting response times quantile
 

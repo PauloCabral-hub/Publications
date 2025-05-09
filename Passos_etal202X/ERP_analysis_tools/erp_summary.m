@@ -123,57 +123,79 @@ function [gerp, ierp_easy_access, gerp_test_ref,...
     end
 
     % Homogeneize, align and baseline in subject level
-
-    for a = 1:size(lablen_repo,2)
+    
+    cut_repo_layer = cell( size(cut_repo,1), size(cut_repo,2), size(cut_repo,3) );
+    for a = 1:size(lablen_repo,2) % subject
         disp(['Homegeneizing, aligning and baselining ' num2str(a/size(lablen_repo,2)) ])
         final_len = round( quantile(lablen_repo(:,a,2),plen) );
         for c = 1:size(cut_repo,3) % electrodes
             for d = 1:size(cut_repo,2) % trials
-                sig = cut_repo{a,d,c}-mean(cut_repo{a,d,c});
+                sig = cut_repo{a,d,c}-mean(base_repo{a,d,c});
                 if length(sig) > final_len
-                   sig = sig(1:final_len); 
+                   lsig = ones(1,final_len);
+                   sig = sig(1:final_len);
                 elseif length(sig) < final_len && isequal(align_method,'left')
                    zpad = zeros(1, final_len - length(sig) );
+                   lsig = [ones(1, length(sig)) zpad];
                    sig = [sig zpad];
                 else
                    zpad = zeros(1, final_len - length(sig) );
-                   sig = [zpad sig];            
+                   lsig = [zpad ones(1, length(sig))];
+                   sig = [zpad sig];
                 end
                 cut_repo{a,d,c} = sig;
+                cut_repo_layer{a,d,c} = lsig;
             end    
         end
     end
 
-    % Calculating the ERPs
+    % Calculating the ERPs: subject level
 
     erp_repo = cell(elec_num,subjs_num);
-    for a = 1:size(cut_repo,1)
+    for a = 1:size(cut_repo,1) % subject
        disp(['Calculating the ERPs ' num2str(a/size(lablen_repo,2)) ])
-       for b = 1:size(cut_repo,3) 
+       for b = 1:size(cut_repo,3) % electrode
           sig_len = length(cut_repo{a,1,1});
-          mid_erp = zeros( size(cut_repo,3), sig_len ); 
-          for c = 1:size(cut_repo,2) 
+          mid_erp = zeros( size(cut_repo,2), sig_len );
+          mid_erp_layer = zeros( size(cut_repo,2), sig_len ); 
+          for c = 1:size(cut_repo,2) % trial
               mid_erp(c,:) = cut_repo{a,c,b};
+              mid_erp_layer(c,:) = cut_repo_layer{a,c,b};
           end
-          erp_repo{b,a} = mean(mid_erp,1);
+          merp = zeros(1,sig_len);
+          for d = 1:sig_len
+              non_zero = find( mid_erp_layer(:,d) == 1);
+              merp(1,d) = mean( mid_erp( non_zero, d ) ); %#ok<FNDSB>
+          end
+          erp_repo{b,a} = merp;
        end
     end
 
-    % Calculating the ERPs by context
+
+    % Calculating the ERPs by context: ADAPT
 
     cerp_repo = cell(elec_num,subjs_num, length(contexts) );
-    for a = 1:size(cut_repo,1)
+    for a = 1:size(cut_repo,1) % subjects
        disp(['Calculating the ERPs by context ' num2str(a/size(lablen_repo,2)) ])
-       for b = 1:size(cut_repo,3) 
+       for b = 1:size(cut_repo,3) % electrodes
           sig_len = length(cut_repo{a,1,1});
-          mid_erp = zeros( size(cut_repo,3), sig_len );
-          mid_lab = zeros( size(cut_repo,3), 1 );
+          mid_erp = zeros( size(cut_repo,2), sig_len );
+          mid_erp_layer = zeros( size(cut_repo,2), sig_len );
+          mid_lab = zeros( size(cut_repo,2), 1 );
           for c = 1:size(cut_repo,2) 
               mid_erp(c,:) = cut_repo{a,c,b};
+              mid_erp_layer(c,:) = cut_repo_layer{a,c,b};
               mid_lab(c,1) = lablen_repo(c,a,1);
           end
           for d = 1:length(contexts)
-              cerp_repo{b,a,d} = mean( mid_erp( mid_lab == d, :), 1);
+              erp_selection = mid_erp( mid_lab == d, :);
+              layer_selection = mid_erp_layer( mid_lab == d, :);
+              merp = zeros(1,sig_len);
+              for e = 1:sig_len
+                  non_zero = find( layer_selection(:,e) == 1);
+                  merp(1,e) = mean( erp_selection( non_zero, e ) ); %#ok<FNDSB>
+              end
+              cerp_repo{b,a,d} = merp; 
           end
        end
     end
@@ -188,11 +210,11 @@ function [gerp, ierp_easy_access, gerp_test_ref,...
        end
     end
 
-    % Homogeneizing ERPs in group level
+    % Homogeneizing ERPs: group level
 
     erp_cube = zeros(elec_num, min_len, subjs_num);
-    for a = 1:size(erp_repo,2)
-        for b = 1:size(erp_repo,1)
+    for a = 1:size(erp_repo,2) % subjects
+        for b = 1:size(erp_repo,1) % electrode
            sig = erp_repo{b,a};
            if isequal(align_method,'right')
               sig = sig(1, length(sig) - min_len +1 : length(sig) );
@@ -203,7 +225,7 @@ function [gerp, ierp_easy_access, gerp_test_ref,...
         end
     end
 
-    % Homogeneizing ERPs by context in group level
+    % Homogeneizing ERPs by context: group level
 
     cerp_multi_cube = cell(length(contexts),1);
     for c = 1:length(contexts)

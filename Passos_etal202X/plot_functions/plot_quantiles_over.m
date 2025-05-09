@@ -22,7 +22,7 @@ function [] = plot_quantiles_over(repo, pcts, only_bellow)
 
     % Extract the rts values from the repo data
     rts = [];
-    for a = 1:size(repo,1)
+    for a = 1:size(repo,1) % subjects
        bdata = repo{a,2};
        rts = [rts; bdata(:,7)];
     end
@@ -35,7 +35,6 @@ function [] = plot_quantiles_over(repo, pcts, only_bellow)
     end
     vpcts = -vpcts;  % Invert the quantiles to match the data direction
     vpcts = sort(vpcts);
-    pcts = sort(pcts,'desc');
 
     % Loop through each subplot and add the text annotations
     for a = 1:16
@@ -47,7 +46,7 @@ function [] = plot_quantiles_over(repo, pcts, only_bellow)
 
         % Add quantile text annotations to the subplot (do not overwrite the plot)
         for b = 1:length(vpcts)
-            h_t = text(vpcts(b),  h.YLim(1) + r*pcts(b), num2str( pcts(b),2 ) );
+            h_t = text(1 - vpcts(b),  h.YLim(1) + r*pcts(b), num2str( pcts(b),2 ) );
             set(h_t,'Rotation', 90) 
             set(h_t,'Color',[1, 0, 0, 0.3])  % Red color with transparency
             set(h_t,'FontSize',8)
